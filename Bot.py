@@ -5,9 +5,8 @@ import qrcode
 from io import BytesIO
 
 TELEGRAM_TOKEN = '6737649634:AAFGI35qqLmE1P0nvdLeP4SgEIC67vi1M0Y'
-
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger(name)
+logger = logging.getLogger(__name__)
 
 async def start(update: Update, context: CallbackContext):
     await update.message.reply_text("Give me a link : )")
@@ -19,14 +18,14 @@ async def handle_message(update: Update, context: CallbackContext):
     qr.add_data(user_input)
     qr.make(fit=True)
     
-    img = qr.make_image(fill='black', back_color='white')
+    img = qrcode.make_image(fill='black', back_color='white')
     
     buffer = BytesIO()
     img.save(buffer, format='PNG')
     buffer.seek(0)
     
     await context.bot.send_photo(chat_id=update.effective_chat.id, photo=InputFile(buffer, filename='qr.png'))
-    await update.message.reply_text("Here is your QR code. You can scan it at scanqr.org")
+    await update.message.reply_text("Here is your QR code\. You can scan it at scanqr\.org")
 
 def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()
@@ -36,5 +35,5 @@ def main():
     
     application.run_polling()
 
-if name == 'main':
+if __name__ == '__main__':
     main()
